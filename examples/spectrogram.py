@@ -47,6 +47,7 @@ parser = ArgumentParser()
 parser.add_argument("input", type=str, help="Input file")
 parser.add_argument("--output", type=str, help="Output data file (.npz, .hd5, .pkl)")
 parser.add_argument("--sr", type=int, default=44100, help="Sample rate used for the NSGT (default=%(default)s)")
+parser.add_argument("--ch", type=int, default=1, help="stereo or mono used for the NSGT (default=%(default)s)")
 parser.add_argument("--data-times", type=str, default='times', help="Data name for times (default='%(default)s')")
 parser.add_argument("--data-frqs", type=str, default='f', help="Data name for frequencies (default='%(default)s')")
 parser.add_argument("--data-qs", type=str, default='q', help="Data name for q factors (default='%(default)s')")
@@ -73,6 +74,7 @@ if not os.path.exists(args.input):
     parser.error("Input file '%s' not found"%args.input)
 
 fs = args.sr
+ch = args.sr
 
 # build transform
 scales = {'log':LogScale, 'lin':LinScale, 'mel':MelScale, 'oct':OctScale}
@@ -91,7 +93,7 @@ slicq = NSGT_sliced(scl, args.sllen, args.trlen, fs,
                     )
 
 # Read audio data
-sf = SndReader(args.input, sr=fs, chns=2)
+sf = SndReader(args.input, sr=fs, chns=ch)
 signal = sf()
 
 # duration of signal in s
